@@ -13,20 +13,29 @@ export const VirtualList = (props: VirtualListProps1) => {
   const [ViewHeight, setViewHeight] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
+  const calculating = useRef(false);
 
   const handleScroll = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { scrollTop } = ref.current as any;
-    const start = Math.max(0, Math.floor(scrollTop / itemHeight));
-    const end = Math.min(
-      data.length,
-      start + Math.ceil(containerHeight / itemHeight) + buffer
-    );
-    setStartIndex(start);
-    setEndIndex(end);
-
-    setPaddingTop(start * itemHeight);
-    // setPaddingBottom((data.length - end) * itemHeight);
+    requestAnimationFrame(() => {
+      if (calculating.current) {
+        return;
+      }
+      // open limit
+      calculating.current = true;
+      const start = Math.max(0, Math.floor(scrollTop / itemHeight));
+      const end = Math.min(
+        data.length,
+        start + Math.ceil(containerHeight / itemHeight) + buffer
+      );
+      setStartIndex(start);
+      setEndIndex(end);
+      // setPaddingBottom((data.length - end) * itemHeight);
+      setPaddingTop(start * itemHeight);
+      // close limit
+      calculating.current = false;
+    });
   };
   useEffect(() => {
     handleScroll();
