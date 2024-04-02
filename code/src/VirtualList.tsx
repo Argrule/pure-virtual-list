@@ -6,9 +6,7 @@ export const VirtualList = (props: VirtualListProps1) => {
   const { data, renderItem, itemHeight, containerHeight, buffer } = props;
 
   const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(
-    Math.min(data.length, Math.ceil(containerHeight / itemHeight))
-  );
+  const [endIndex, setEndIndex] = useState(0);
 
   //   const [PaddingBottom, setPaddingBottom] = useState(0);
   const [PaddingTop, setPaddingTop] = useState(0);
@@ -24,8 +22,6 @@ export const VirtualList = (props: VirtualListProps1) => {
       data.length,
       start + Math.ceil(containerHeight / itemHeight) + buffer
     );
-
-    console.log(scrollTop, start, end, PaddingTop);
     setStartIndex(start);
     setEndIndex(end);
 
@@ -33,11 +29,9 @@ export const VirtualList = (props: VirtualListProps1) => {
     // setPaddingBottom((data.length - end) * itemHeight);
   };
   useEffect(() => {
-    console.log('useEffect');
-
     handleScroll();
     setViewHeight(data.length * itemHeight);
-  }, [data]);
+  }, [data, itemHeight]);
 
   return (
     <div
