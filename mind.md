@@ -18,9 +18,9 @@
 ## 性能优化
 
 1. 减少 scroll 事件频繁触发
-   - 通过 requestAnimationFrame 限制频率
-2. 减少 setState 频繁触发
-   - 通过 useRef 限制频率
+   - 通过 isScrollBusy 节流 限制频率
+2. 使用 requestAnimationFrame
+   - 在浏览器的下一次重绘之前执行回调函数，可避免在不必要的绘制帧上浪费计算资源，动画效果更平滑、更高效，减少页面抖动
 3. 减少计算
    - 通过 useMemo 缓存计算结果
 
