@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { VirtualListProps } from './VirtualList.d';
-type VirtualListProps1 = VirtualListProps<string>;
 
-export const VirtualList = (props: VirtualListProps1) => {
+export const VirtualList = (props: VirtualListProps<unknown>) => {
   const { data, renderItem, itemHeight, containerHeight, buffer } = props;
 
   /**
@@ -26,7 +25,7 @@ export const VirtualList = (props: VirtualListProps1) => {
 
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
-  //   const [PaddingBottom, setPaddingBottom] = useState(0);
+
   const [PaddingTop, setPaddingTop] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -41,8 +40,8 @@ export const VirtualList = (props: VirtualListProps1) => {
     }
     // open limit
     isScrollBusy.current = true;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { scrollTop } = ref.current as any;
+
+    const { scrollTop } = ref.current as HTMLDivElement;
     /**
      * ? 请求动画帧 避免画面抖动
      */
@@ -56,7 +55,6 @@ export const VirtualList = (props: VirtualListProps1) => {
        * ? 用于占位，替代没有DOM的项，将已创建DOM的项 顶到可见区域
        */
       setPaddingTop(start * itemHeight);
-      // setPaddingBottom((data.length - end) * itemHeight);
 
       // close limit
       isScrollBusy.current = false;
@@ -73,18 +71,16 @@ export const VirtualList = (props: VirtualListProps1) => {
     <div
       style={{ overflow: 'auto', maxHeight: containerHeight }}
       onScroll={handleScroll}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ref={ref as any}
+      ref={ref as React.RefObject<HTMLDivElement>}
     >
       <section
         style={{
           height: ViewHeight,
           paddingTop: PaddingTop,
-          // paddingBottom: PaddingBottom},
           boxSizing: 'border-box',
         }}
       >
-        {data.slice(startIndex, endIndex).map((item: string, index: number) => (
+        {data.slice(startIndex, endIndex).map((item, index: number) => (
           <div key={index} style={{ height: itemHeight }}>
             {renderItem(item, index)}
           </div>

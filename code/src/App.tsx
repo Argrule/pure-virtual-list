@@ -2,17 +2,25 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { VirtualList } from './VirtualList';
 
-const ListItem = (item: string, index: number) => {
-  return <div key={index}>{item}</div>;
+type itemType = {
+  id: number;
+  key: string;
+};
+
+const ListItem = (item: unknown, index: number) => {
+  return <div key={index}>{(item as itemType).key}</div>;
 };
 
 function App() {
-  const [List, setList] = useState<string[]>([]);
+  const [List, setList] = useState<unknown[]>([]);
 
   const handleAddMockData = () => {
     const tmp = [...List];
     for (let i = 0; i < 50; i++) {
-      tmp.push(`item ${i}`);
+      tmp.push({
+        id: i,
+        key: `item ${i}`,
+      });
     }
     setList(tmp);
   };
