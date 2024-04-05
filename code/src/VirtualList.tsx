@@ -30,6 +30,7 @@ export const VirtualList = (props: VirtualListProps<unknown>) => {
 
     const ref = useRef<HTMLDivElement>(null);
     const isScrollBusy = useRef(false);
+    const startDistanceRef = useRef(1);
 
     /**
      * ? 处理数据，计算出 切片索引 & padding-top
@@ -42,15 +43,24 @@ export const VirtualList = (props: VirtualListProps<unknown>) => {
         isScrollBusy.current = true;
 
         const { scrollTop } = ref.current as HTMLDivElement;
+        
+        const startDistance = Math.floor(scrollTop / itemHeight);
+        /**
+         * ? 滑动距离不超过一个元素，未发生变化
+         */
+        if (startDistance === startDistanceRef.current) {
+            // close limit
+            isScrollBusy.current = false;
+            return;
+        };
+        startDistanceRef.current = startDistance;
+
         /**
          * ? 请求动画帧 避免画面抖动
          */
         requestAnimationFrame(() => {
-            const start = Math.max(
-                0,
-                Math.floor(scrollTop / itemHeight) - Buffer
-            );
-            const end = Math.min(data.length, start + Count + Buffer);
+            const start = Math.max(0, startDistance - Buffer);
+            const end = Math.min(data.length, start + Count + Buffer * 2);
             setStartIndex(start);
             setEndIndex(end);
 
@@ -68,6 +78,13 @@ export const VirtualList = (props: VirtualListProps<unknown>) => {
      */
     useEffect(() => {
         handleScroll();
+        return () => {
+            isScrollBusy.current = false;
+            /**
+             * ? 重置滑动距离, 保证 初始化 时能触发 handleScroll
+             */
+            startDistanceRef.current = 1;
+        }
     }, [handleScroll]);
 
     return (
