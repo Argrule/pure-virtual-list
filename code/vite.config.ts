@@ -1,49 +1,52 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import { readFileSync } from 'fs'
-import path from 'path'
-
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import typescript from "@rollup/plugin-typescript";
+import { readFileSync } from "fs";
 const packageJson = JSON.parse(
-    readFileSync('./package.json', { encoding: 'utf-8' }),
-)
+    readFileSync("./package.json", { encoding: "utf-8" })
+);
 const globals = {
     ...(packageJson?.dependencies || {}),
-}
-function resolve(str: string) {
-    return path.resolve(__dirname, str)
-}
+};
+const resolve = (str: string) => path.resolve(__dirname, str);
 
-// https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        typescript({
+            target: "es2015", // 这里指定编译到的版本，
+            rootDir: resolve("src/package/VirtualList"),
+            declaration: true,
+            declarationDir: resolve("dist"),
+            exclude: resolve("node_modules/**"),
+            allowSyntheticDefaultImports: true,
+        }),
+    ],
     build: {
         rollupOptions: {
-            // input: resolve('src/index.ts'), // 指定入口文件
-            // output: {
-            //     dir: 'dist',
-            //     entryFileNames: '[name].js',
-            //     format: 'umd',
-            //     name: 'pure-virtual-list',
-            //     globals: {
-            //         react: 'React',
-            //         'react-dom': 'ReactDOM',
-            //     },
-            // },
-            external: ['react', 'react-dom', ...Object.keys(globals)],
+            output: {
+                globals: {
+                    react: "React",
+                    "react-dom": "ReactDOM",
+                },
+            },
+            external: ["react", "react-dom", ...Object.keys(globals)],
+            // external: ["react", "react-dom"],
         },
-        // lib: {
-        //     entry: 'src/index.ts',
-        //     name: 'pure-virtual-list',
-        //     fileName: 'pure-virtual-list'
-        // }
-        outDir: 'dist',
         lib: {
             // 组件库源码的入口文件
-            entry: resolve('src/index.ts'),
-            name: 'index',
-            fileName: 'index',
+            entry: resolve("src/package/VirtualList/index.tsx"),
+            name: "PureVirtualList",
+            fileName: (format) => {
+                if (format === "es") {
+                    return "index.js";                    
+                }
+                return `index.${format}.js`;
+            },
             // 打包格式
-            formats: ['es', 'cjs'],
+            // formats: ["es", "cjs"], //default: ["es", "umd"]
         },
+        outDir: "dist",
     },
-})
+});

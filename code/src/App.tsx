@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-// import { VirtualList } from './VirtualList';
-import VirtualList from "../dist";
+// import VirtualList from "./demo/index";
+import { VirtualList } from "../dist";
 
 type itemType = {
     id: number;
