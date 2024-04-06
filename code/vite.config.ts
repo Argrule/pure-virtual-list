@@ -2,13 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import typescript from "@rollup/plugin-typescript";
-import { readFileSync } from "fs";
-const packageJson = JSON.parse(
-    readFileSync("./package.json", { encoding: "utf-8" })
-);
-const globals = {
-    ...(packageJson?.dependencies || {}),
-};
+// import { readFileSync } from "fs";
+// const packageJson = JSON.parse(
+//     readFileSync("./package.json", { encoding: "utf-8" })
+// );
+// const globals = {
+//     ...(packageJson?.dependencies || {}),
+//     ...(packageJson?.devDependencies||{}),
+// };
+// console.log(globals);
+
 const resolve = (str: string) => path.resolve(__dirname, str);
 
 export default defineConfig({
@@ -31,8 +34,8 @@ export default defineConfig({
                     "react-dom": "ReactDOM",
                 },
             },
-            external: ["react", "react-dom", ...Object.keys(globals)],
-            // external: ["react", "react-dom"],
+            // external: ["react", "react-dom", ...Object.keys(globals)],
+            external: ["react", "react-dom"],
         },
         lib: {
             // 组件库源码的入口文件
