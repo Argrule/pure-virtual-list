@@ -1,11 +1,35 @@
-# React + TypeScript + Vite
+# React + Pure Virtual List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This package provides a pure React Virtual List.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. pnpm i pure-virtual-list
+
+2. Use it in your component
+
+```tsx
+import { VirtualList } from 'pure-virtual-list';
+// list template
+const ListItem = (item: unknown, index: number) => {
+    return <div key={index}>{(item as {id: number; key: string;}).key}</div>;
+};
+const App = () => {
+  // mock data
+  const items = Array.from({ length: 1000 }, (_, i) => ({ id: i, key: `Item ${i}` }));
+
+  return (
+      <VirtualList
+        data={items}
+        renderItem={ListItem}
+        itemHeight={50}
+        containerHeight={300}
+        buffer={4}
+      />
+  )
+}
+export default App
+```
 
 ## Expanding the ESLint configuration
 

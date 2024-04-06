@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+import "./Demo.css";
 // import VirtualList from "./demo/index";
-import { VirtualList } from "../dist";
+// import { VirtualList } from "../dist";
+import { VirtualList } from "pure-virtual-list";
 
 type itemType = {
     id: number;
@@ -33,9 +34,7 @@ function App() {
     }, []);
     return (
         <>
-            <p className="read-the-docs">here is virtual list</p>
-            <button onClick={handleAddMockData}>mock data</button>
-            <button onClick={handleClear}>clear</button>
+            <p className="read-the-docs">here is virtual list</p>            
             <VirtualList
                 data={List}
                 renderItem={ListItem}
@@ -43,6 +42,8 @@ function App() {
                 containerHeight={300}
                 buffer={4}
             />
+            <button onClick={handleAddMockData} className="card">mock data</button>
+            <button onClick={handleClear} className="card">clear</button>
         </>
     );
 }

@@ -1,9 +1,27 @@
 {
   "name": "pure-virtual-list",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "main": "./dist/index.umd.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    ".eslintrc.cjs",
+    "pnpm-lock.yaml",
+    "README.md",
+    "tsconfig.json",
+    "tsconfig.node.json",
+    "vite.config.ts",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
